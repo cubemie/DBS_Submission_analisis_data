@@ -15,6 +15,7 @@ st.set_page_config(
 sns.set_theme(style="whitegrid")
 
 # Load & cache data 
+@st.cache_data
 def load_data():
     orders      = pd.read_csv("data/orders_dataset.csv")
     order_items = pd.read_csv("data/order_items_dataset.csv")
@@ -50,9 +51,9 @@ def load_data():
 
 orders_df, main_df, payments_df, reviews_df = load_data()
 
-#  Sidebar 
-st.sidebar.image("🛒",
-                 use_container_width=True)
+# Sidebar 
+st.sidebar.title("🛒 E-Commerce Dashboard")
+st.sidebar.markdown("---")
 st.sidebar.title("🔎 Filter Data")
 
 min_date = orders_df["order_purchase_timestamp"].min().date()
@@ -76,7 +77,7 @@ selected_cats = st.sidebar.multiselect(
 st.sidebar.markdown("---")
 st.sidebar.markdown("📊 **Proyek Analisis Data**\nDicoding — E-Commerce Public Dataset (Olist)")
 
-# Apply filters 
+# Apply filters
 mask_date = (
     (orders_df["order_purchase_timestamp"].dt.date >= start_date) &
     (orders_df["order_purchase_timestamp"].dt.date <= end_date)
@@ -96,7 +97,7 @@ st.title("🛒 E-Commerce Public Dataset Dashboard")
 st.markdown(f"Menampilkan data dari **{start_date.strftime('%d %b %Y')}** hingga **{end_date.strftime('%d %b %Y')}**")
 st.markdown("---")
 
-# Metric Cards 
+# Metric Cards
 col1, col2, col3, col4 = st.columns(4)
 
 total_orders   = filtered_orders["order_id"].nunique()
@@ -105,7 +106,7 @@ avg_review     = reviews_df[reviews_df["order_id"].isin(filtered_orders["order_i
 total_items    = len(filtered_main)
 
 col1.metric("📦 Total Pesanan",    f"{total_orders:,}")
-col2.metric("💰 Total Revenue",    f"R${total_revenue:,.0f}")
+col2.metric("💰 Total Revenue",    f"${total_revenue:,.0f}")
 col3.metric("🛍️ Total Item Terjual", f"{total_items:,}")
 col4.metric("⭐ Rata-rata Ulasan",  f"{avg_review:.2f} / 5.00")
 
@@ -141,12 +142,12 @@ for bar, val in zip(b1, top_vol["jumlah_item"][::-1]):
 c_rev = ["#1E90FF" if i == 0 else "#AED6F1" for i in range(top_n)]
 b2 = axes1[1].barh(top_rev.index[::-1], top_rev["total_revenue"][::-1],
                    color=c_rev[::-1], edgecolor="white")
-axes1[1].set_title("Berdasarkan Total Pendapatan (R$)")
-axes1[1].set_xlabel("Total Pendapatan (R$)")
-axes1[1].xaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f"R${x/1e6:.1f}M"))
+axes1[1].set_title("Berdasarkan Total Pendapatan ($)")
+axes1[1].set_xlabel("Total Pendapatan ($)")
+axes1[1].xaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f"${x/1e6:.1f}M"))
 for bar, val in zip(b2, top_rev["total_revenue"][::-1]):
     axes1[1].text(bar.get_width() + 500, bar.get_y() + bar.get_height()/2,
-                  f"R${val/1e6:.2f}M", va="center", fontsize=8)
+                  f"${val/1e6:.2f}M", va="center", fontsize=8)
 
 plt.tight_layout()
 st.pyplot(fig1)
@@ -211,11 +212,11 @@ axes2[1].bar(range(len(monthly_revenue)), monthly_revenue["total_revenue"],
              color=bar_c, edgecolor="white")
 axes2[1].plot(range(len(monthly_revenue)), monthly_revenue["total_revenue"],
               color="#154360", linewidth=1.5, marker="o", markersize=4)
-axes2[1].set_title("Total Revenue per Bulan (R$)")
-axes2[1].set_ylabel("Revenue (R$)")
+axes2[1].set_title("Total Revenue per Bulan ($)")
+axes2[1].set_ylabel("Revenue R($)")
 axes2[1].set_xticks(range(len(monthly_revenue)))
 axes2[1].set_xticklabels(monthly_revenue["bulan"], rotation=45, ha="right", fontsize=7.5)
-axes2[1].yaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f"R${x/1e6:.1f}M"))
+axes2[1].yaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f"${x/1e6:.1f}M"))
 
 plt.tight_layout()
 st.pyplot(fig2)
