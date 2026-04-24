@@ -20,9 +20,10 @@ Dataset berisi 8 tabel terhubung dengan lebih dari 99,000 pesanan dari September
 ## 🛠️ Setup Environment
 
 ### Menggunakan Anaconda
-```bash
+
 
 ### Menggunakan Shell/Terminal (venv)
+
 ```bash
 python -m venv .venv
 .venv\Scripts\activate
