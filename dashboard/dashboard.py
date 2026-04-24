@@ -212,8 +212,8 @@ axes2[1].bar(range(len(monthly_revenue)), monthly_revenue["total_revenue"],
              color=bar_c, edgecolor="white")
 axes2[1].plot(range(len(monthly_revenue)), monthly_revenue["total_revenue"],
               color="#154360", linewidth=1.5, marker="o", markersize=4)
-axes2[1].set_title("Total Revenue per Bulan R(R$)")
-axes2[1].set_ylabel("Revenue R(R$)")
+axes2[1].set_title("Total Revenue per Bulan R($)")
+axes2[1].set_ylabel("Revenue R($)")
 axes2[1].set_xticks(range(len(monthly_revenue)))
 axes2[1].set_xticklabels(monthly_revenue["bulan"], rotation=45, ha="right", fontsize=7.5)
 axes2[1].yaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f"R${x/1e6:.1f}M"))
