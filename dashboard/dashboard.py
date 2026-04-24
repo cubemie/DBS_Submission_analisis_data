@@ -5,7 +5,7 @@ import matplotlib.ticker as mticker
 import seaborn as sns
 from datetime import datetime
 
-# ── Page config ──────────────────────────────────────────────────────────────
+# Page config 
 st.set_page_config(
     page_title="E-Commerce Dashboard",
     page_icon="🛒",
@@ -14,8 +14,7 @@ st.set_page_config(
 
 sns.set_theme(style="whitegrid")
 
-# ── Load & cache data ─────────────────────────────────────────────────────────
-@st.cache_data
+# Load & cache data 
 def load_data():
     orders      = pd.read_csv("data/orders_dataset.csv")
     order_items = pd.read_csv("data/order_items_dataset.csv")
@@ -51,9 +50,7 @@ def load_data():
 
 orders_df, main_df, payments_df, reviews_df = load_data()
 
-# ── Sidebar ───────────────────────────────────────────────────────────────────
-st.sidebar.image("https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Olist_logo.png/320px-Olist_logo.png",
-                 use_container_width=True)
+#  Sidebar 
 st.sidebar.title("🔎 Filter Data")
 
 min_date = orders_df["order_purchase_timestamp"].min().date()
@@ -77,7 +74,7 @@ selected_cats = st.sidebar.multiselect(
 st.sidebar.markdown("---")
 st.sidebar.markdown("📊 **Proyek Analisis Data**\nDicoding — E-Commerce Public Dataset (Olist)")
 
-# ── Apply filters ─────────────────────────────────────────────────────────────
+# Apply filters 
 mask_date = (
     (orders_df["order_purchase_timestamp"].dt.date >= start_date) &
     (orders_df["order_purchase_timestamp"].dt.date <= end_date)
@@ -92,13 +89,12 @@ filtered_main = main_df[mask_main]
 if selected_cats:
     filtered_main = filtered_main[filtered_main["product_category_name_english"].isin(selected_cats)]
 
-# ── Header ────────────────────────────────────────────────────────────────────
+# Header 
 st.title("🛒 E-Commerce Public Dataset Dashboard")
 st.markdown(f"Menampilkan data dari **{start_date.strftime('%d %b %Y')}** hingga **{end_date.strftime('%d %b %Y')}**")
 st.markdown("---")
 
-# ── Metric Cards ──────────────────────────────────────────────────────────────
-col1, col2, col3, col4 = st.columns(4)
+#  Metric Cards 
 
 total_orders   = filtered_orders["order_id"].nunique()
 total_revenue  = filtered_main["price"].sum()
@@ -112,7 +108,7 @@ col4.metric("⭐ Rata-rata Ulasan",  f"{avg_review:.2f} / 5.00")
 
 st.markdown("---")
 
-# ── Pertanyaan 1: Top Kategori ─────────────────────────────────────────────────
+# Pertanyaan 1: Top Kategori 
 st.subheader("📌 Pertanyaan 1: Kategori Produk Terlaris & Pendapatan Terbesar")
 
 cat_stats = filtered_main.groupby("product_category_name_english").agg(
@@ -161,7 +157,7 @@ with st.expander("💡 Insight Pertanyaan 1"):
 
 st.markdown("---")
 
-# ── Pertanyaan 2: Tren Bulanan ────────────────────────────────────────────────
+# Pertanyaan 2: Tren Bulanan 
 st.subheader("📌 Pertanyaan 2: Tren Jumlah Pesanan & Revenue Bulanan")
 
 monthly_orders = (
@@ -230,7 +226,7 @@ with st.expander("💡 Insight Pertanyaan 2"):
 
 st.markdown("---")
 
-# ── Bonus: Ulasan & Pembayaran ────────────────────────────────────────────────
+# Bonus: Ulasan & Pembayaran 
 st.subheader("🔍 Analisis Tambahan: Ulasan & Metode Pembayaran")
 
 filtered_reviews = reviews_df[reviews_df["order_id"].isin(filtered_orders["order_id"])]
