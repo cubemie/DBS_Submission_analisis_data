@@ -21,10 +21,6 @@ Dataset berisi 8 tabel terhubung dengan lebih dari 99,000 pesanan dari September
 
 ### Menggunakan Anaconda
 ```bash
-conda create --name main-ds python=3.9
-conda activate main-ds
-pip install -r requirements.txt
-```
 
 ### Menggunakan Shell/Terminal (venv)
 ```bash
@@ -44,11 +40,6 @@ pip install -r requirements.txt
 ---
 
 ## 🚀 Cara Menjalankan
-
-### Jupyter Notebook
-```bash
-jupyter notebook Proyek_Analisis_Data\ e-\ comarce.ipynb
-```
 
 ### Streamlit Dashboard (jika tersedia)
 ```bash
