@@ -147,7 +147,7 @@ axes1[1].set_xlabel("Total Pendapatan ($)")
 axes1[1].xaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f"${x/1e6:.1f}M"))
 for bar, val in zip(b2, top_rev["total_revenue"][::-1]):
     axes1[1].text(bar.get_width() + 500, bar.get_y() + bar.get_height()/2,
-                  f"${val/1e6:.2f}M", va="center", fontsize=8)
+                  f"R${val/1e6:.2f}M", va="center", fontsize=8)
 
 plt.tight_layout()
 st.pyplot(fig1)
