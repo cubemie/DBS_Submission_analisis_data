@@ -42,7 +42,7 @@ pip install -r requirements.txt
 
 ## 🚀 Cara Menjalankan
 
-### Streamlit Dashboard (jika tersedia)
+### Streamlit Dashboard 
 ```bash
 streamlit run dashboard.py
 ```
@@ -79,4 +79,4 @@ streamlit run dashboard.py
 ---
 
 ## 📝 Author
-MUTIA SANIYA RAHMA - DBS Coding Camp Submission
+MUTIA SANIYA RAHMA - DBS Coding Camp Submission Data Analiys
