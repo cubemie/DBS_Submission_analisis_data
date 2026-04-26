@@ -1,3 +1,4 @@
+import numpy as np
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -5,7 +6,7 @@ import matplotlib.ticker as mticker
 import seaborn as sns
 from datetime import datetime
 
-# Page config 
+# Page config
 st.set_page_config(
     page_title="E-Commerce Dashboard",
     page_icon="🛒",
@@ -77,7 +78,7 @@ selected_cats = st.sidebar.multiselect(
 st.sidebar.markdown("---")
 st.sidebar.markdown("📊 **Proyek Analisis Data**\nDicoding — E-Commerce Public Dataset (Olist)")
 
-# Apply filters
+# Apply filters 
 mask_date = (
     (orders_df["order_purchase_timestamp"].dt.date >= start_date) &
     (orders_df["order_purchase_timestamp"].dt.date <= end_date)
@@ -97,7 +98,7 @@ st.title("🛒 E-Commerce Public Dataset Dashboard")
 st.markdown(f"Menampilkan data dari **{start_date.strftime('%d %b %Y')}** hingga **{end_date.strftime('%d %b %Y')}**")
 st.markdown("---")
 
-# Metric Cards
+# Metric Cards 
 col1, col2, col3, col4 = st.columns(4)
 
 total_orders   = filtered_orders["order_id"].nunique()
@@ -113,7 +114,7 @@ col4.metric("⭐ Rata-rata Ulasan",  f"{avg_review:.2f} / 5.00")
 st.markdown("---")
 
 # Pertanyaan 1: Top Kategori 
-st.subheader("📌 Pertanyaan 1: Kategori Produk Terlaris & Pendapatan Terbesar")
+st.subheader("📌 Pertanyaan 1: Kategori produk apa yang menghasilkan volume penjualan tertinggi dan total pendapatan terbesar selama periode 2016–2018?")
 
 cat_stats = filtered_main.groupby("product_category_name_english").agg(
     jumlah_item   =("order_id", "count"),
@@ -147,7 +148,7 @@ axes1[1].set_xlabel("Total Pendapatan R($)")
 axes1[1].xaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f"R${x/1e6:.1f}M"))
 for bar, val in zip(b2, top_rev["total_revenue"][::-1]):
     axes1[1].text(bar.get_width() + 500, bar.get_y() + bar.get_height()/2,
-                  f"R${val/1e6:.2f}M", va="center", fontsize=8)
+                  fR"R${val/1e6:.2f}M", va="center", fontsize=8)
 
 plt.tight_layout()
 st.pyplot(fig1)
@@ -162,7 +163,7 @@ with st.expander("💡 Insight Pertanyaan 1"):
 st.markdown("---")
 
 # Pertanyaan 2: Tren Bulanan 
-st.subheader("📌 Pertanyaan 2: Tren Jumlah Pesanan & Revenue Bulanan")
+st.subheader("📌 Pertanyaan 2: Bagaimana tren jumlah pesanan bulanan dari tahun 2017 hingga 2018, dan bagaimana pola pertumbuhannya?")
 
 monthly_orders = (
     filtered_orders
@@ -253,7 +254,7 @@ with col_a:
     st.pyplot(fig3)
 
 with col_b:
-    fig4, ax4 = plt.subplots(figsize=(6, 4))
+    fig4, ax4 = plt.subplots(figsize=(6, 5))
     pay_counts = filtered_pay["payment_type"].value_counts()
     payment_labels = {
         "credit_card": "Kartu Kredit",
@@ -263,12 +264,42 @@ with col_b:
     }
     pay_counts.index = [payment_labels.get(p, p) for p in pay_counts.index]
     colors_p = ["#1E90FF", "#5DADE2", "#AED6F1", "#D6EAF8"][:len(pay_counts)]
-    ax4.pie(pay_counts, labels=pay_counts.index, autopct="%1.1f%%",
-            colors=colors_p, startangle=140,
-            wedgeprops={"edgecolor": "white", "linewidth": 1.5})
-    ax4.set_title("Distribusi Metode Pembayaran", fontsize=11)
+
+    wedges, texts, autotexts = ax4.pie(
+        pay_counts,
+        autopct="%1.1f%%",
+        colors=colors_p,
+        startangle=140,
+        wedgeprops={"edgecolor": "white", "linewidth": 1.5},
+        pctdistance=0.6,
+        labeldistance=1.25
+    )
+
+    for autotext in autotexts:
+        autotext.set_visible(False)
+
+    bbox_props = dict(boxstyle="square,pad=0.2", fc="white", ec="none")
+    kw = dict(arrowprops=dict(arrowstyle="-", color="red"),
+              bbox=bbox_props, zorder=0, va="center")
+
+    for i, (wedge, pct) in enumerate(zip(wedges, autotexts)):
+        ang = (wedge.theta2 - wedge.theta1) / 2.0 + wedge.theta1
+        y = np.sin(np.deg2rad(ang))
+        x = np.cos(np.deg2rad(ang))
+        horizontalalignment = "left" if x > 0 else "right"
+        label = f"{pay_counts.index[i]}\n{pay_counts.values[i]/pay_counts.sum()*100:.1f}%"
+        ax4.annotate(
+            label,
+            xy=(x * 0.75, y * 0.75),
+            xytext=(x * 1.2, y * 1.2),
+            horizontalalignment=horizontalalignment,
+            fontsize=8.5,
+            **kw
+        )
+
+    ax4.set_title("Distribusi Metode Pembayaran", fontsize=11, pad=15)
     plt.tight_layout()
     st.pyplot(fig4)
 
 st.markdown("---")
-st.caption("Dashboard dibuat untuk Proyek Analisis Data — Dicoding | Dataset: E-Commerce Public Dataset (Olist Brazil)")
+st.caption("Dashboard Proyek Analisis Data")
